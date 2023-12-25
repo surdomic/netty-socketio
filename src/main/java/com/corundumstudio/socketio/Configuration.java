@@ -92,6 +92,8 @@ public class Configuration {
 
     private boolean needClientAuth = false;
 
+    private boolean triggerConnectedEvtInAuth = false;
+
     public Configuration() {
     }
 
@@ -161,6 +163,7 @@ public class Configuration {
         setWebsocketCompression(conf.isWebsocketCompression());
         setRandomSession(conf.randomSession);
         setNeedClientAuth(conf.isNeedClientAuth());
+        setTriggerConnectedEvtInAuth(conf.isTriggerConnectedEvtInAuth());
     }
 
     public JsonSupport getJsonSupport() {
@@ -617,5 +620,13 @@ public class Configuration {
     }
     public boolean isNeedClientAuth() {
         return needClientAuth;
+    }
+
+    public boolean isTriggerConnectedEvtInAuth() {
+        return triggerConnectedEvtInAuth;
+    }
+
+    public void setTriggerConnectedEvtInAuth(boolean triggerConnectedEvtInAuth) {
+        this.triggerConnectedEvtInAuth = triggerConnectedEvtInAuth;
     }
 }

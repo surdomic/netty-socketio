@@ -77,6 +77,7 @@ public class AuthorizeHandler extends ChannelInboundHandlerAdapter implements Di
     private final DisconnectableHub disconnectable;
     private final AckManager ackManager;
     private final ClientsBox clientsBox;
+    private boolean triggerConnectedEvt = false;
 
     public AuthorizeHandler(String connectPath, CancelableScheduler scheduler, Configuration configuration, NamespacesHub namespacesHub, StoreFactory storeFactory,
             DisconnectableHub disconnectable, AckManager ackManager, ClientsBox clientsBox) {
@@ -89,6 +90,7 @@ public class AuthorizeHandler extends ChannelInboundHandlerAdapter implements Di
         this.disconnectable = disconnectable;
         this.ackManager = ackManager;
         this.clientsBox = clientsBox;
+        this.triggerConnectedEvt = configuration.isTriggerConnectedEvtInAuth();
     }
 
     @Override
@@ -279,9 +281,10 @@ public class AuthorizeHandler extends ChannelInboundHandlerAdapter implements Di
                 client.send(packet);
 
             configuration.getStoreFactory().pubSubStore().publish(PubSubType.CONNECT, new ConnectMessage(client.getSessionId()));
-
-            SocketIOClient nsClient = client.addNamespaceClient(ns);
-            ns.onConnect(nsClient);
+            if (triggerConnectedEvt) {
+                SocketIOClient nsClient = client.addNamespaceClient(ns);
+                ns.onConnect(nsClient);
+            }
         }
     }
 
